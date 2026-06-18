@@ -1,15 +1,205 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>4U</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>4U</title>
+
+<style>
+body{
+    background:#111;
+    color:white;
+    font-family:Arial,sans-serif;
+    text-align:center;
+    padding:40px;
+}
+
+.tela{
+    display:none;
+}
+
+.ativa{
+    display:block;
+}
+
+button{
+    padding:12px 20px;
+    margin:10px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+input{
+    padding:10px;
+    font-size:16px;
+}
+
+video{
+    max-width:100%;
+    margin-top:20px;
+}
+</style>
 </head>
-<body style="background-color:black; color:white;">
 
-<h1>Olá!</h1>
+<body>
 
-<p>Eu sou o 4U 🤖🖖</p>
+<!-- Tela 1 -->
+<div id="tela1" class="tela ativa">
+    <h1>Bem-vindo(a)!</h1>
+    <p>Eu sou 4U 🤖🖖</p>
+    <button onclick="proximaTela(1,2)">Continuar</button>
+</div>
 
-<p>Se você está vendo isso, o site está funcionando.</p>
+<!-- Tela 2 -->
+<div id="tela2" class="tela">
+    <h2>Qual seu nome?</h2>
+
+    <input type="text" id="nome">
+
+    <br><br>
+
+    <button onclick="salvarNome()">Continuar</button>
+</div>
+
+<!-- Tela 3 -->
+<div id="tela3" class="tela">
+    <h2 id="saudacao"></h2>
+
+    <p>Como você está se sentindo hoje? 🤖🩺</p>
+
+    <button onclick="respostaHumor('Que bom saber disso! ✨🤖✨')">
+        Bem
+    </button>
+
+    <button onclick="respostaHumor('Entendo... posso tentar melhorar seu humor 🤖🔧')">
+        Mais ou menos
+    </button>
+
+    <button onclick="respostaHumor('Lamento ouvir isso... 🤖☔')">
+        Tristão
+    </button>
+</div>
+
+<!-- Tela 4 -->
+<div id="tela4" class="tela">
+    <p id="mensagemHumor"></p>
+
+    <h2>Aí... quer saber de uma coisa?</h2>
+
+    <p>Eu só existo por sua causa, sabia?</p>
+
+    <button onclick="proximaTela(4,5)">
+        Continuar
+    </button>
+</div>
+
+<!-- Tela 5 -->
+<div id="tela5" class="tela">
+
+    <h2>Mas é sério...</h2>
+
+    <p>Não sou bom com palavras 🤖💧</p>
+
+    <p>Pra deixar claro o que quero dizer, veja o vídeo abaixo 👇</p>
+
+    <!-- TROCAR DEPOIS -->
+    <video controls>
+        <source src="video.mp4" type="video/mp4">
+    </video>
+
+    <br>
+
+    <a href="video.mp4" download>
+        📥 Baixar vídeo
+    </a>
+
+    <br><br>
+
+    <button onclick="proximaTela(5,6)">
+        Continuar
+    </button>
+
+</div>
+
+<!-- Tela 6 -->
+<div id="tela6" class="tela">
+
+    <h2>O que você achou?</h2>
+
+    <button onclick="finalMensagem()">
+        Fofinho 🥹
+    </button>
+
+    <button onclick="finalMensagem()">
+        Esperava mais 🥱
+    </button>
+
+</div>
+
+<!-- Tela 7 -->
+<div id="tela7" class="tela">
+
+    <h2>Você merece o mundo 🌎</h2>
+
+    <p id="utopia"></p>
+
+    <h1>❤️❤️❤️ TE AMO ❤️❤️❤️</h1>
+
+</div>
+
+<script>
+
+let nomeUsuario = "";
+
+function proximaTela(atual,proxima){
+
+document.getElementById("tela"+atual)
+.classList.remove("ativa");
+
+document.getElementById("tela"+proxima)
+.classList.add("ativa");
+
+}
+
+function salvarNome(){
+
+nomeUsuario =
+document.getElementById("nome").value;
+
+if(nomeUsuario.trim()==""){
+    alert("Digite seu nome!");
+    return;
+}
+
+document.getElementById("saudacao")
+.innerText =
+"Olá " + nomeUsuario + ", estava à sua espera 🤖👐";
+
+proximaTela(2,3);
+
+}
+
+function respostaHumor(texto){
+
+document.getElementById("mensagemHumor")
+.innerText = texto;
+
+proximaTela(3,4);
+
+}
+
+function finalMensagem(){
+
+document.getElementById("utopia")
+.innerText =
+"E se chamaria " + nomeUsuario + "topia!";
+
+proximaTela(6,7);
+
+}
+
+</script>
 
 </body>
 </html>
