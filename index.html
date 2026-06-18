@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4U Project</title>
     <style>
-        /* CSS: Controla o visual escuro */
         body {
             background-color: #121212;
             color: #ffffff;
@@ -25,6 +24,8 @@
             width: 100%;
             max-width: 450px;
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
         .text-box {
             font-size: 1.2rem;
@@ -73,16 +74,24 @@
             border-radius: 8px;
             margin-top: 15px;
         }
-        /* Animação dos Balões */
-        .balloon {
+        /* CSS dos elementos flutuantes (Balões e Corações) */
+        .floating-element {
             position: absolute;
             bottom: -100px;
-            font-size: 2rem;
-            animation: float up 4s linear forwards;
+            font-size: 2.5rem;
+            user-select: none;
+            pointer-events: none;
+            animation: floatUp 4s linear forwards;
+            z-index: 1;
         }
-        @keyframes float {
-            to {
-                transform: translateY(-120vh);
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-130vh) rotate(20deg);
+                opacity: 0;
             }
         }
     </style>
@@ -95,7 +104,6 @@
 </div>
 
 <script>
-    // JavaScript: Controla a lógica do fluxo (substitui os 'while True' e 'inputs')
     let nome = "";
     let etapa = 0;
 
@@ -135,7 +143,7 @@
         }
         else if (etapa === 4) {
             chatText.innerHTML = `Mas é sério ${nome}. Não sou bom com palavras... 🤖💧<br>Pra deixar claro o que quero dizer, veja esse vídeo abaixo 🤖👇`;
-            // SUBSTITUA O SRC ABAIXO PELO LINK DO SEU VÍDEO
+            // 🎬 COLOQUE O NOME DO SEU VÍDEO AQUI:
             inputArea.innerHTML = `
                 <video src="seu-video.mp4" controls autoplay id="meuVideo"></video>
                 <br><button id="btnVideo" onclick="proximaEtapa()" style="margin-top:10px;">Continuar após o vídeo</button>
@@ -152,7 +160,7 @@
         }
         else if (etapa === 6) {
             chatText.innerHTML = `Bom era isso...eu poderia ter feito algo um pouco mais elaborado mas...<br>Sei que não seria o suficiente pois pra mim você merece muito mais...<br>Você merece o mundo 🤖🫴🌎<br>E se chamaria <b>${nome}topia!</b>`;
-            inputArea.innerHTML = `<button onclick="soltarBaloes()">Clique para surpresa ❤️</button>`;
+            inputArea.innerHTML = `<button onclick="soltarEfeitos()">Clique para surpresa ❤️</button>`;
         }
     }
 
@@ -184,7 +192,8 @@
 
     function respostaSabe(sabe) {
         if (sabe) {
-            chatText.innerHTML = `Ah é?...🤖🥀<br>Então você sabe muito! ⚡️🧠⚡️<br><img src="link-da-imagem-meme.jpg" alt="Meme Eu Sabo">`;
+            // 🖼️ COLOQUE O NOME DA SUA IMAGEM DO MEME AQUI NO SRC:
+            chatText.innerHTML = `Ah é?...🤖🥀<br>Então você sabe muito! ⚡️🧠⚡️<br><img src="eu-sabo.jpg" alt="Meme Eu Sabo">`;
         } else {
             chatText.innerText = "Bom, agora você sabe 🤖ººº{😉}";
         }
@@ -201,22 +210,29 @@
         }
     }
 
-    function soltarBaloes() {
+    // Função que solta os balões e corações juntos
+    function soltarEfeitos() {
         chatText.innerHTML = "❤️❤️❤️TE AMO❤️❤️❤️";
         inputArea.innerHTML = "";
         
-        // Cria os balões subindo na tela
-        for (let i = 0; i < 30; i++) {
-            let balloon = document.createElement("div");
-            balloon.className = "balloon";
-            balloon.innerText = "🎈";
-            balloon.style.left = Math.random() * 100 + "vw";
-            balloon.style.animationDelay = Math.random() * 2 + "s";
-            document.body.appendChild(balloon);
+        const elementos = ["🎈", "❤️", "💖", "💕"];
+        
+        for (let i = 0; i < 40; i++) {
+            let el = document.createElement("div");
+            el.className = "floating-element";
+            
+            // Escolhe aleatoriamente um elemento da lista acima
+            el.innerText = elementos[Math.floor(Math.random() * elementos.length)];
+            
+            // Deixa a subida bem variada e orgânica
+            el.style.left = Math.random() * 100 + "vw";
+            el.style.animationDelay = Math.random() * 2.5 + "s";
+            el.style.fontSize = (Math.random() * 1.5 + 1.5) + "rem"; // tamanhos variados
+            
+            document.body.appendChild(el);
         }
     }
 
-    // Inicializa o primeiro passo
     fluxo();
 </script>
 
