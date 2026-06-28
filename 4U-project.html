@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>4U 🤖</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Nunito:wght@400;700;900&display=swap');
+
+    :root {
+      --bg: #0d0d0f;
+      --panel: #13131a;
+      --border: #2a2a3a;
+      --accent: #7b61ff;
+      --accent2: #ff6b9d;
+      --text: #e8e8f0;
+      --muted: #888899;
+      --green: #39ff9a;
+      --red: #ff4f6a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* ── CARD ── */
+    #app {
+      width: 100%;
+      max-width: 520px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(123,97,255,0.15);
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      background: #1a1a28;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar .dots { display: flex; gap: 6px; }
+    .topbar .dot {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .dot-r { background: var(--red); }
+    .dot-y { background: #ffca3a; }
+    .dot-g { background: var(--green); }
+    .topbar .title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      margin-left: 8px;
+    }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      margin-left: auto;
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── CHAT LOG ── */
+    #chat {
+      padding: 24px 20px;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg {
+      display: flex;
+      gap: 10px;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.bot { align-items: flex-start; }
+    .msg.user { align-items: flex-start; flex-direction: row-reverse; }
+
+    .avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .bot .avatar { background: #1e1e35; border: 1px solid var(--accent); }
+    .user .avatar { background: #1e2a1e; border: 1px solid var(--green); }
+
+    .bubble {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .bot .bubble {
+      background: #1a1a2e;
+      border: 1px solid var(--border);
+      border-top-left-radius: 4px;
+      color: var(--text);
+    }
+    .user .bubble {
+      background: #1a2e1a;
+      border: 1px solid #2a3a2a;
+      border-top-right-radius: 4px;
+      color: #c8f0c8;
+    }
+    .bubble.error {
+      background: #2e1a1a;
+      border-color: var(--red);
+      color: #ffaaaa;
+    }
+
+    /* ── TYPING INDICATOR ── */
+    #typing {
+      display: none;
+      gap: 10px;
+      align-items: center;
+      padding: 0 20px 10px;
+    }
+    #typing .avatar { width: 36px; height: 36px; border-radius: 50%; background: #1e1e35; border: 1px solid var(--accent); display:flex;align-items:center;justify-content:center;font-size:18px; }
+    .dots-anim { display: flex; gap: 5px; padding: 10px 14px; background: #1a1a2e; border: 1px solid var(--border); border-radius: 14px; border-top-left-radius: 4px; }
+    .dots-anim span { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: bounce 1.2s infinite; }
+    .dots-anim span:nth-child(2) { animation-delay: 0.2s; }
+    .dots-anim span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); }
+      30% { transform: translateY(-6px); }
+    }
+
+    /* ── INPUT AREA ── */
+    #input-area {
+      padding: 14px 20px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #input-area input[type="text"] {
+      width: 100%;
+      background: #0d0d14;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #input-area input[type="text"]:focus {
+      border-color: var(--accent);
+    }
+    #input-area input[type="text"]::placeholder { color: var(--muted); }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    button {
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+    button:hover { filter: brightness(1.15); transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-option {
+      background: #1e1e35;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-option:hover { border-color: var(--accent); }
+    .btn-continue {
+      background: #1e1e35;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      width: 100%;
+      font-size: 13px;
+    }
+
+    /* ── CONFETES / CORAÇÕES ── */
+    #confetti-container {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      animation: floatUp 2.5s ease-in forwards;
+      bottom: -30px;
+    }
+    @keyframes floatUp {
+      to { bottom: 110%; opacity: 0; transform: rotate(20deg); }
+    }
+
+    /* ── VIDEO PLACEHOLDER ── */
+    .video-box {
+      background: #0d0d14;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .video-box .play-icon { font-size: 40px; margin-bottom: 8px; }
+
+    /* ── MEME IMG ── */
+    .meme-box {
+      background: #0d0d14;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    /* ── FIM ── */
+    .final-love {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--accent2);
+      letter-spacing: 2px;
+      padding: 10px 0 4px;
+      text-shadow: 0 0 20px rgba(255,107,157,0.5);
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="topbar">
+    <div class="dots">
+      <div class="dot dot-r"></div>
+      <div class="dot dot-y"></div>
+      <div class="dot dot-g"></div>
+    </div>
+    <span class="title">4U — interactive.exe</span>
+    <div class="status-dot"></div>
+  </div>
+
+  <div id="chat"></div>
+
+  <div id="typing">
+    <div class="avatar">🤖</div>
+    <div class="dots-anim">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div id="input-area"></div>
+</div>
+
+<div id="confetti-container"></div>
+
+<script>
+  // ── estado ──
+  let nome = "";
+  let step = 0;
+
+  const chat = document.getElementById("chat");
+  const inputArea = document.getElementById("input-area");
+  const typing = document.getElementById("typing");
+
+  // ── helpers ──
+  function addMsg(text, who = "bot", extra = "") {
+    const wrap = document.createElement("div");
+    wrap.className = `msg ${who}`;
+    const av = document.createElement("div");
+    av.className = "avatar";
+    av.textContent = who === "bot" ? "🤖" : "🧑";
+    const bub = document.createElement("div");
+    bub.className = `bubble ${extra}`;
+    bub.innerHTML = text;
+    wrap.appendChild(av);
+    wrap.appendChild(bub);
+    chat.appendChild(wrap);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function addRaw(html) {
+    const div = document.createElement("div");
+    div.style.padding = "0 0 4px 0";
+    div.innerHTML = html;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function clearInput() { inputArea.innerHTML = ""; }
+
+  function showTyping(ms) {
+    return new Promise(res => {
+      typing.style.display = "flex";
+      chat.scrollTop = chat.scrollHeight;
+      setTimeout(() => {
+        typing.style.display = "none";
+        res();
+      }, ms);
+    });
+  }
+
+  async function botSay(text, delay = 900) {
+    await showTyping(delay);
+    addMsg(text, "bot");
+  }
+
+  function textInput(placeholder, onSubmit) {
+    clearInput();
+    const inp = document.createElement("input");
+    inp.type = "text";
+    inp.placeholder = placeholder;
+    const row = document.createElement("div");
+    row.className = "btn-row";
+    const btn = document.createElement("button");
+    btn.className = "btn-primary";
+    btn.textContent = "Enviar";
+    const go = () => {
+      const val = inp.value.trim();
+      onSubmit(val);
+    };
+    btn.onclick = go;
+    inp.onkeydown = e => { if (e.key === "Enter") go(); };
+    row.appendChild(btn);
+    inputArea.appendChild(inp);
+    inputArea.appendChild(row);
+    inp.focus();
+  }
+
+  function optionButtons(opts, onChoice) {
+    clearInput();
+    const row = document.createElement("div");
+    row.className = "btn-row";
+    opts.forEach(([label, value]) => {
+      const btn = document.createElement("button");
+      btn.className = "btn-option";
+      btn.textContent = label;
+      btn.onclick = () => {
+        addMsg(label, "user");
+        clearInput();
+        onChoice(value);
+      };
+      row.appendChild(btn);
+    });
+    inputArea.appendChild(row);
+  }
+
+  function continueBtn(label = "Continuar ▸", cb) {
+    clearInput();
+    const btn = document.createElement("button");
+    btn.className = "btn-continue";
+    btn.textContent = label;
+    btn.onclick = () => { clearInput(); cb(); };
+    inputArea.appendChild(btn);
+  }
+
+  // ── FLUXO ──
+
+  async function start() {
+    await botSay("Bem-vindo(a)! 🖖");
+    await botSay("Eu sou <strong>4U</strong>, muito prazer 🤖");
+    continueBtn("Continuar ▸", askNome);
+  }
+
+  async function askNome() {
+    await botSay("Qual o seu nome?");
+    textInput("Digite seu nome...", handleNome);
+  }
+
+  function handleNome(val) {
+    if (val.length === 0) {
+      addMsg("Digite pelo menos uma letrinha poxa 🤖💔", "bot", "error");
+      textInput("Digite seu nome...", handleNome);
+    } else if (val.length > 15) {
+      addMsg("Malz, mas o nome deve ter no máximo 15 caracteres! 🤖⛔", "bot", "error");
+      textInput("Digite seu nome...", handleNome);
+    } else {
+      nome = val;
+      addMsg(val, "user");
+      clearInput();
+      afterNome();
+    }
+  }
+
+  async function afterNome() {
+    await botSay(`Olá <strong>${nome}</strong>, estava à sua espera 🤖👐`);
+    continueBtn("Continuar ▸", askEmocao);
+  }
+
+  async function askEmocao() {
+    await botSay(`Como você está se sentindo hoje, ${nome}? 🤖🩺`);
+    optionButtons([
+      ["1) Bem 😊", "1"],
+      ["2) Mais ou menos 😐", "2"],
+      ["3) Tô tristão 😔", "3"],
+    ], handleEmocao);
+  }
+
+  async function handleEmocao(v) {
+    let resp = "";
+    if (v === "1") resp = `Que bom saber disso, ${nome}! ✨🤖✨`;
+    else if (v === "2") resp = `Entendo, ${nome}. Posso tentar melhorar seu humor 🤖🔧`;
+    else resp = `Lamento ouvir isso, ${nome}. A vida pode ser chata quando estamos desmotivados... 🤖☔`;
+    await botSay(resp);
+    continueBtn("Continuar ▸", perguntaExistencia);
+  }
+
+  async function perguntaExistencia() {
+    await botSay(`Aí... quer saber de uma coisa, ${nome}?`);
+    await botSay("Eu só existo por sua causa, sabia?", 700);
+    optionButtons([["Sim", "sim"], ["Não", "nao"]], handleExistencia);
+  }
+
+  async function handleExistencia(v) {
+    if (v === "sim") {
+      await botSay("Ah é?... 🤖🥀");
+      await botSay("Então você sabe muito! ⚡🧠⚡", 600);
+      // Placeholder do meme "Eu sabo muito"
+      addRaw(`
+        <img src="Eu_sabo.jpg" alt="Eu sabo muito" style="max-width:100%; border-radius:10px;">
+      `);
+      continueBtn("Continuar ▸", parteFinal);
+    } else {
+      await botSay("Bom, agora você sabe 🤖 ºº{😉}");
+      continueBtn("Continuar ▸", parteFinal);
+    }
+  }
+
+  async function parteFinal() {
+    await botSay(`Mas é sério, ${nome}...`);
+    await botSay("Não sou bom com palavras... 🤖💧", 700);
+    await botSay("Pra deixar claro o que quero dizer, veja esse vídeo abaixo 🤖👇", 700);
+
+    // Placeholder do vídeo
+    addRaw(`
+      <div class="video-box">
+        <div class="play-icon">▶️</div>
+        <em>[ Cole aqui o link do vídeo que quiser mostrar! ]</em><br>
+        <small>Substitua esse bloco por um &lt;iframe&gt; do YouTube ou outro player.</small>
+      </div>
+    `);
+
+    continueBtn("Assistir ao vídeo / Continuar ▸", afterVideo);
+  }
+
+  async function afterVideo() {
+    await botSay("O que você achou? 🤖👉👈");
+    optionButtons([
+      ["1- Fofinho 🥹", "1"],
+      ["2- Esperava mais 🥱", "2"],
+    ], handleVideo);
+  }
+
+  async function handleVideo(v) {
+    if (v === "1") {
+      await botSay("Fico feliz que gostou! 🤖🫶");
+      continueBtn("Continuar ▸", encerramento);
+    } else {
+      await botSay("Então faz melhor! 🤖🖕");
+      continueBtn("Continuar ▸", async () => {
+        await botSay("Coé pa ri, #resenha #humor 🤖🫶");
+        continueBtn("Continuar ▸", encerramento);
+      });
+    }
+  }
+
+  async function encerramento() {
+    await botSay(`Bom, era isso... vlw por ter me dado motivação pra fazer tudo isso...`);
+    await botSay(`Vou continuar me esforçando cada vez mais pra tentar te fazer feliz 🤖🫶`, 1000);
+    continueBtn("Continuar ▸", async () => {
+      await botSay("Mesmo você maltratando meu precioso 🤖👉🥚🥚");
+      continueBtn("Continuar ▸", finalLove);
+    });
+  }
+
+  async function finalLove() {
+    clearInput();
+    await showTyping(800);
+    addRaw(`<div class="final-love">❤️❤️❤️ TE AMO ❤️❤️❤️</div>`);
+    launchHearts();
+  }
+
+  function launchHearts() {
+    const container = document.getElementById("confetti-container");
+    const emojis = ["❤️","🤖","💜","🫶","✨","💖","💕"];
+    for (let i = 0; i < 30; i++) {
+      setTimeout(() => {
+        const el = document.createElement("div");
+        el.className = "heart";
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = Math.random() * 100 + "vw";
+        el.style.animationDuration = (1.8 + Math.random() * 1.5) + "s";
+        el.style.fontSize = (16 + Math.random() * 20) + "px";
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+      }, i * 80);
+    }
+  }
+
+  // ── INIT ──
+  start();
+</script>
+</body>
+</html>
