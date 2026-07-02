@@ -456,6 +456,10 @@
     else if (v === "2") resp = `Entendo, ${nome}. Posso tentar melhorar seu humor 🤖🔧`;
     else resp = `Lamento ouvir isso, ${nome}. A vida pode ser chata quando estamos desmotivados... 🤖☔`;
     await botSay(resp);
+    if (v === "3") {
+      await botSay("Ou quando percebemos que a vida está correndo e ainda estamos parado", 700);
+      await botSay(`Mas anime-se ${nome}, talvez essa possa ser o verdadeiro início de sua jornada!`, 700);
+    }
     continueBtn("Continuar ▸", perguntaExistencia);
   }
 
