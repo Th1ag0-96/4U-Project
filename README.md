@@ -29,6 +29,7 @@ O robô **4U** conversa com quem abrir a página: pergunta o nome, faz algumas p
 
 - `index.html`: a página inteira (estilo e lógica incluídos)
 - `Eu_sabo.jpg`: imagem usada na conversa (precisa ficar na mesma pasta do `index.html`)
+- `versao-python/`: a versão original do projeto, feita em Python
 
 ## 👤 Autor
 
